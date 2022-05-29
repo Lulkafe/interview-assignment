@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "build": "tsc"
+    "build": "tsc",
+    "server": "npx ts-node ./src/index.ts"
   },
   "keywords": [],
   "author": "Seimei Matsusaki",
