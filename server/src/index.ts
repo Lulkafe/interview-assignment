@@ -97,3 +97,6 @@ server.listen(PORT, () => {
     console.log(`ORIGIN: ${ALLOWED_ORIGIN}`);
     console.log(`Listening on port ${PORT}`)
 })
+
+
+export default server; 
