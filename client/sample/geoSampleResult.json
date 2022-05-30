@@ -1,0 +1,44 @@
+[
+    {
+        "name":"London",
+        "local_names":{"th":"ลอนดอน","si":"ලන්ඩන්","bo":"ལོན་ཊོན།","mn":"Лондон","it":"Londra","os":"Лондон","fi":"Lontoo","fy":"Londen","fr":"Londres","sa":"लन्डन्","ab":"Лондан","vi":"Luân Đôn","kw":"Loundres","de":"London","mk":"Лондон","sv":"London","ky":"Лондон","zu":"ILondon","pt":"Londres","tl":"Londres","nl":"Londen","sr":"Лондон","sk":"Londýn","mi":"Rānana","ro":"Londra","uk":"Лондон","hi":"लंदन","br":"Londrez","mt":"Londra","ascii":"London","he":"לונדון","eu":"Londres","gl":"Londres","hy":"Լոնդոն","ja":"ロンドン","ca":"Londres","bg":"Лондон","wo":"Londar","en":"London","my":"လန်ဒန်မြို့","kk":"Лондон","ko":"런던","te":"లండన్","ru":"Лондон","sq":"Londra","cy":"Llundain","mr":"लंडन","sc":"Londra","tr":"Londra","tg":"Лондон","af":"Londen","co":"Londra","ne":"लण्डन","ps":"لندن","cs":"Londýn","an":"Londres","cu":"Лондонъ","fa":"لندن","no":"London","bn":"লন্ডন","tt":"Лондон","yi":"לאנדאן","am":"ለንደን","oc":"Londres","lv":"Londona","kv":"Лондон","feature_name":"London","ta":"இலண்டன்","yo":"Lọndọnu","ka":"ლონდონი","lt":"Londonas","ar":"لندن","hu":"London","li":"Londe","ml":"ലണ്ടൻ","gu":"લંડન","or":"ଲଣ୍ଡନ","es":"Londres","el":"Λονδίνο","pl":"Londyn","ur":"لندن","be":"Лондан","sl":"London","kn":"ಲಂಡನ್","ku":"London","rm":"Londra","lo":"ລອນດອນ","et":"London","eo":"Londono","is":"Lundúnir","gd":"Lunnainn","ln":"Londoni","ht":"Lonn","zh":"伦敦","cv":"Лондон","ba":"Лондон","gn":"Londye","ga":"Londain","gv":"Lunnin"},
+        "lat":51.5073219,
+        "lon":-0.1276474,
+        "country":"GB",
+        "state":"England"
+    },
+
+    {
+        "name":"City of London",
+        "local_names":{"ru":"Сити","he":"הסיטי של לונדון","hi":"सिटी ऑफ़ लंदन","pt":"Cidade de Londres","en":"City of London","ko":"시티 오브 런던","zh":"倫敦市","fr":"Cité de Londres","lt":"Londono Sitis","es":"City de Londres","uk":"Лондонське Сіті"},
+        "lat":51.5156177,
+        "lon":-0.0919983,
+        "country":"GB",
+        "state":"England"
+    },
+
+    {
+        "name":"London",
+        "local_names":{"ar":"لندن","en":"London","fr":"London","ko":"런던","ru":"Лондон","uk":"Лондон"},
+        "lat":42.9836747,
+        "lon":-81.2496068,
+        "country":"CA",
+        "state":"Ontario"
+    },  
+
+    {
+        "name":"London",
+        "lat":37.1289771,
+        "lon":-84.0832646,
+        "country":"US",
+        "state":"Kentucky"
+    },
+    
+    {
+        "name":"London",
+        "lat":39.8864493,
+        "lon":-83.448253,
+        "country":"US",
+        "state":"Ohio"
+    }
+]
