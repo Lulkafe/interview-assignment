@@ -21,12 +21,13 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(helmet());
 app.use(cors({
-    origin: ALLOWED_ORIGIN,
+    origin: '*',
     methods: ['GET']
 }));
 
 
 app.get('/', (reqFromUser: Request, resToUser: Response) => {
+    console.log('[GET] /');
     resToUser.sendStatus(200);
 })
 
@@ -35,10 +36,14 @@ app.get('/', (reqFromUser: Request, resToUser: Response) => {
 //Insted of the city name, the lattitude and lontidude must be given.
 //Detail: https://openweathermap.org/current
 app.get('/api/city/weather', async (reqFromUser: Request, resToUser: Response) => {
+    console.log('[GET] /api/city/weather');
+    
     const { lat, lon } = reqFromUser.query;  
 
-    if (!lat || !lon || typeof lat !== 'number' || typeof lon !== 'number') 
+    if (typeof lat !== 'string'|| typeof lon !== 'string' ||
+        Number.isNaN(lat) || Number.isNaN(lon))
         return resToUser.sendStatus(400);
+
 
     const query: string = `?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=${WeatherAPISettings.units}`;
     const requestURL: string = WeatherAPISettings.URL + query;
@@ -63,6 +68,8 @@ app.get('/api/city/weather', async (reqFromUser: Request, resToUser: Response) =
 //(e.g. Country Code, Latitude, Lontitude)
 //Detail: https://openweathermap.org/api/geocoding-api
 app.get('/api/city/info', async (reqFromUser: Request, resToUser: Response) => {
+    console.log('[GET] /api/city/info');
+
     const { cityName } = reqFromUser.query;  
     
     if (!cityName || typeof cityName !== 'string')
@@ -76,7 +83,7 @@ app.get('/api/city/info', async (reqFromUser: Request, resToUser: Response) => {
         
         if (resFromOpenAPI.status !== 200)
             return resToUser.sendStatus(resFromOpenAPI.status);
-         
+
         resToUser.json(resFromOpenAPI.data);
     } catch(e) {
         console.error(e);
