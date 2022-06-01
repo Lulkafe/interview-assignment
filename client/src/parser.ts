@@ -1,4 +1,4 @@
-import { GeoCoordinates, WeatherInfo } from "./types";
+import { GeoCoordinates, WeatherInfo } from "./sharedTypes";
 
 
 export const parseGeoData = (data): GeoCoordinates => {

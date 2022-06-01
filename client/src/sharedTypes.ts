@@ -21,6 +21,3 @@ export type SearchResult = {
     data: null | WeatherInfo
 }
 
-export type ResultTableProps = {
-    results: SearchResult []
-}
