@@ -1,5 +1,5 @@
 import React from "react";
-import { SearchResult, WeatherInfo } from "../types";
+import { SearchResult, WeatherInfo } from "../sharedTypes";
 
 
 export type ResultTableProps = {
@@ -14,6 +14,7 @@ export type TableRowProps = {
 const WeatherTable = (props: ResultTableProps) => {
 
     const { results }: { results: SearchResult[] } = props;
+    const getKey = () => Math.random().toString(36);
 
     return (
         <table>
@@ -21,8 +22,8 @@ const WeatherTable = (props: ResultTableProps) => {
             {
                 results.map((result: SearchResult) => {
                     return result.data? 
-                        <TableRowWithData result={result}/> :
-                        <TableRowWithoutData result={result}/>
+                        <TableRowWithData result={result} key={getKey()}/> :
+                        <TableRowWithoutData result={result} key={getKey()}/>
                 })
             }
             </tbody>
@@ -36,7 +37,7 @@ const TableRowWithData = (props: TableRowProps) => {
     const data: WeatherInfo = props.result.data;
 
     return (
-        <tr key={Math.random().toString(36)}>
+        <tr>
             <td>
                 { data.name } <br/>
                 { data.country } <br/>
@@ -52,7 +53,7 @@ const TableRowWithoutData = (props: TableRowProps) => {
     const { result }: { result: SearchResult } = props;
 
     return (
-        <tr key={Math.random().toString(36)}>
+        <tr>
             <td>
                 <p>Not Found: ${result.keyword}</p>
             </td>
