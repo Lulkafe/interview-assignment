@@ -1,4 +1,5 @@
 import { Dispatch, useDebugValue } from "react"
+import { Search } from "react-router-dom"
 import { Action, WeatherInfo } from "./sharedTypes"
 import { SearchResult } from "./sharedTypes"
 import { AppState } from "./sharedTypes"
@@ -22,9 +23,16 @@ export class Dispatcher {
         this.dispatch = dispatch;
     }
 
-    addSearchResult (result: SearchResult) {
-        const input: Action = { type: ACTIONS.ADD.RESULT, value: result };
-        this.dispatch(input);
+    addSearchResult (keyword: string, data: WeatherInfo) {
+        const result: SearchResult = { keyword, data };
+        const action: Action = { type: ACTIONS.ADD.RESULT, value: result };
+        this.dispatch(action);
+    }
+
+    addNotFoundSearchResult (keyword: string) {
+        const result: SearchResult = { keyword, data: null };
+        const action: Action = { type: ACTIONS.ADD.RESULT, value: result }
+        this.dispatch(action);
     }
 }
 
