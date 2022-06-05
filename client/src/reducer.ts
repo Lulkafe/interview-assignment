@@ -1,4 +1,4 @@
-import { Dispatch } from "react"
+import { Dispatch, useDebugValue } from "react"
 import { Action, WeatherInfo } from "./sharedTypes"
 import { SearchResult } from "./sharedTypes"
 import { AppState } from "./sharedTypes"
@@ -30,6 +30,13 @@ export class Dispatcher {
 
 export const stateReducer = (state: AppState, action: Action) => {
     switch(action.type) {
+
+        case ACTIONS.ADD.RESULT:
+            return {
+                ...state,
+                searchResults: [action.value, ...state.searchResults]
+            }
+
         default:
             return state;
     }
