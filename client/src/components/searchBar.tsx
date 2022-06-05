@@ -1,14 +1,9 @@
-import React, { useRef, useEffect, useContext, useState } from "react";
-import { AppState, CityInfo, GeoCoordinates, SearchResult } from "../sharedTypes";
+import React, { useRef, useContext, useState } from "react";
+import { CityInfo } from "../sharedTypes";
 import { Dispatcher } from "../reducer";
-import API_URLs from "../apiInfo";
-import { extractGeoCoordinates, extractWeatherData, parseGeoResults } from "../parser";
+import { parseGeoResults } from "../parser";
 import AppContext from "../context";
 import { fetchCityInfo, fetchWeatherInfo } from "../fetch";
-
-type SuggestionTableProps = {
-    results: CityInfo []
-}
 
 
 const SearchBar = () => {
@@ -23,12 +18,13 @@ const SearchBar = () => {
     const [cityInfoToShow, setCityInfoToShow] = useState([]);
 
     const inputRef = useRef(null);
+    const minLenToRunAuto = 3;
+
     const onInput = async () => {
         const userInput = inputRef.current.value.trim();
-        const minInputLen = 3;
         
         //Auto-search shouldn't start if the user input is too short
-        if (userInput.length < minInputLen) 
+        if (userInput.length < minLenToRunAuto) 
             return setCityInfoToShow([]);
         
 
@@ -47,10 +43,7 @@ const SearchBar = () => {
 
     }
 
-    const onSubmit = async (e) => {
-
-        e.preventDefault();
-        e.stopPropagation();
+    const aggregateWeatherData = async (index: number = 0) => {
 
         const userInput = inputRef.current.value.trim();
         let cityInfo: CityInfo [] | null = null;
@@ -72,19 +65,33 @@ const SearchBar = () => {
             cityInfo = await fetchCityInfo(userInput);
         }
 
+        //Unexpected case: an error
         if (!cityInfo) 
             return;
 
         if (cityInfo.length === 0) 
             return dispatcher.addNotFoundSearchResult(userInput);
             
-        const weatherData = await fetchWeatherInfo(cityInfo[0].coordinates);
 
+        let weatherData = await fetchWeatherInfo(cityInfo[index].coordinates);
+
+        //Unexpected case: an error
         if (!weatherData)
             return;
 
+        //Since the weather API only receives the latitude and the lontitude,
+        //its response can have a different city name.
+        //This prevents such a case.
+        weatherData.name = cityInfo[index].name;
+
         dispatcher.addSearchResult(userInput, weatherData);
 
+    }
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        aggregateWeatherData();
     }
 
 
@@ -97,13 +104,15 @@ const SearchBar = () => {
                     onInput={onInput}/>
                 <button type="submit">Search</button>
             </form>
-            {cityInfoToShow.length > 0 &&
+            { 
+                /* Show a suggestion table */
+                cityInfoToShow.length > 0 &&
                 <table>
                     <tbody>{
                         parseGeoResults(cityInfoToShow).map((city: CityInfo, i: number) => {
                             return (
                                 <tr key={Math.random().toString(36)}>
-                                    <td>
+                                    <td onClick={ () => aggregateWeatherData(i) }>
                                         {`${city.name}, `}
                                         {city.state? `${city.state}, ` : ""}
                                         {city.country}
@@ -114,10 +123,15 @@ const SearchBar = () => {
                     }</tbody>
                 </table>
             }
+            {
+                /* Show Not Found message only when auto-search runs and found nothing */
+                inputRef.current?.value?.length >= minLenToRunAuto && 
+                cityInfoToShow.length === 0 &&
+                <p>Not Found</p>
+            }   
         </div>
     )
 }
-
 
 
 export default SearchBar;
