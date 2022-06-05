@@ -1,41 +1,50 @@
 import React, { useRef, useEffect, useContext, useState } from "react";
-import { AppState, GeoCoordinates, SearchResult } from "../sharedTypes";
+import { AppState, CityInfo, GeoCoordinates, SearchResult } from "../sharedTypes";
 import { Dispatcher } from "../reducer";
 import API_URLs from "../apiInfo";
-import { extractGeoCoordinates, extractWeatherData } from "../parser";
+import { extractGeoCoordinates, extractWeatherData, parseGeoResults } from "../parser";
 import AppContext from "../context";
+import { fetchCityInfo, fetchWeatherInfo } from "../fetch";
+
+type SuggestionTableProps = {
+    results: CityInfo []
+}
+
 
 const SearchBar = () => {
 
-    const { dispatcher } : { dispatcher: Dispatcher} = useContext(AppContext);
-    const [cachedGeoInfo, setCachedGeoInfo] = useState({});
-    const [cityGeoInfo, setCityGeoInfo] = useState([]);
+    const { dispatcher } : { dispatcher: Dispatcher} = useContext(AppContext); 
+
+    //Store the raw result (array) in a dic to quickly retrieve later
+    //KEY: city name, VALUE: raw result 
+    const [cachedGeoInfo, setCachedGeoInfo] = useState({}); 
+   
+    //Store the raw result (array) to show a suggestion table
+    const [cityInfoToShow, setCityInfoToShow] = useState([]);
+
     const inputRef = useRef(null);
     const onInput = async () => {
         const userInput = inputRef.current.value.trim();
         const minInputLen = 3;
-        const query = `?cityName=${userInput}`;
         
         //Auto-search shouldn't start if the user input is too short
         if (userInput.length < minInputLen) 
-            return;
+            return setCityInfoToShow([]);
         
 
         //If the word was already searched, just use the cached result
         if (userInput in cachedGeoInfo) 
-            return setCityGeoInfo(cachedGeoInfo[userInput]);
+            return setCityInfoToShow(cachedGeoInfo[userInput]);
             
 
-        try {
-            const res: Response = await fetch(API_URLs.dev.geoLoc + query);
-            const results = await res.json();
+        const results: CityInfo [] | null = await fetchCityInfo(userInput);
 
-            setCachedGeoInfo({ ...cachedGeoInfo, [userInput]: results });
-            setCityGeoInfo(results);
+        if (!results) 
+            return setCityInfoToShow([]);
 
-        } catch (e) {
-            console.error(e);
-        }
+        setCachedGeoInfo({ ...cachedGeoInfo, [userInput]: results });
+        setCityInfoToShow(results);
+
     }
 
     const onSubmit = async (e) => {
@@ -44,45 +53,37 @@ const SearchBar = () => {
         e.stopPropagation();
 
         const userInput = inputRef.current.value.trim();
+        let cityInfo: CityInfo [] | null = null;
+
         inputRef.current.value = "";
+        setCityInfoToShow([]);
         
         if (userInput.length === 0)
             return;
         
-        try {
+        if (userInput in cachedGeoInfo) {
+            const result = cachedGeoInfo[userInput];
 
-            let geoInfo = null;
-
-            if (userInput in cachedGeoInfo) {
-                const result = cachedGeoInfo[userInput];
-
-                if (result.length === 0) 
-                    return dispatcher.addNotFoundSearchResult(userInput);
-                
-                geoInfo = result;
-
-            } else {
-                const query = `?cityName=${userInput}`;
-                const resToGeoAPI: Response = await fetch(API_URLs.dev.geoLoc + query);
-
-                geoInfo = await resToGeoAPI.json();
-            }
-
-
-            if (geoInfo.length === 0) 
+            if (result.length === 0) 
                 return dispatcher.addNotFoundSearchResult(userInput);
-                
-    
-            const coordinates: GeoCoordinates = extractGeoCoordinates(geoInfo[0]);
-            const query = `?lat=${coordinates.lat}&lon=${coordinates.lon}`;
-            const resToWthAPI: Response = await fetch(API_URLs.dev.weather + query);
-            const weatherData = await resToWthAPI.json();
-
-            dispatcher.addSearchResult(userInput, extractWeatherData(weatherData));
-
-        } catch (e) {
-            console.error(e);
+            
+            cityInfo = result;
+        } else {
+            cityInfo = await fetchCityInfo(userInput);
         }
+
+        if (!cityInfo) 
+            return;
+
+        if (cityInfo.length === 0) 
+            return dispatcher.addNotFoundSearchResult(userInput);
+            
+        const weatherData = await fetchWeatherInfo(cityInfo[0].coordinates);
+
+        if (!weatherData)
+            return;
+
+        dispatcher.addSearchResult(userInput, weatherData);
 
     }
 
@@ -96,22 +97,27 @@ const SearchBar = () => {
                     onInput={onInput}/>
                 <button type="submit">Search</button>
             </form>
-            
+            {cityInfoToShow.length > 0 &&
+                <table>
+                    <tbody>{
+                        parseGeoResults(cityInfoToShow).map((city: CityInfo, i: number) => {
+                            return (
+                                <tr key={Math.random().toString(36)}>
+                                    <td>
+                                        {`${city.name}, `}
+                                        {city.state? `${city.state}, ` : ""}
+                                        {city.country}
+                                    </td>
+                                </tr>
+                            )
+                        })
+                    }</tbody>
+                </table>
+            }
         </div>
     )
 }
 
-
-const SuggestTable = (props) => {
-
-    return (
-        <table>
-            <tbody>
-
-            </tbody>
-        </table>
-    )
-}
 
 
 export default SearchBar;

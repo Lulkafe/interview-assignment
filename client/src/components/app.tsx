@@ -4,7 +4,7 @@ import Header from "./header";
 import SearchBar from "./searchBar";
 import AppContext from "../context";
 import WeatherTable from "../components/weatherTable";
-import { parseWeatherData } from "../parser";
+import { extractWeatherData } from "../parser";
 import { stateReducer, Dispatcher, initState } from "../reducer";
 
 

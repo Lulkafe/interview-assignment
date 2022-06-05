@@ -8,18 +8,23 @@ export const extractGeoCoordinates = (data): GeoCoordinates => {
     }
 }
 
-export const extractCityInfo = (data): CityInfo => {
-    let cityInfo = {
-        name: data.name,
-        country: data.country
-    }
+export const parseGeoResults = (data): CityInfo[] => {
 
-    if (data.state) 
-        cityInfo["state"] = data.state;
+    console.log(data)
 
-    return cityInfo;
+    return data.map(d => {
+        let cityInfo = {
+            name: d.name,
+            country: d.country,
+            coordinates: extractGeoCoordinates(d)
+        }
+    
+        if (d.state) 
+            cityInfo["state"] = d.state;
+    
+        return cityInfo;
+    });
 }
-
 
 export const extractWeatherData = (data): WeatherInfo => {
     return {

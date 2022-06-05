@@ -6,7 +6,8 @@ export type GeoCoordinates = {
 export type CityInfo = {
     name: string,
     country: string,
-    state?: string
+    state?: string,
+    coordinates: GeoCoordinates
 }
 
 export type WeatherInfo = {
