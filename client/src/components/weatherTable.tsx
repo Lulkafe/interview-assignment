@@ -2,11 +2,11 @@ import React from "react";
 import { SearchResult, WeatherInfo } from "../sharedTypes";
 
 
-export type ResultTableProps = {
+type ResultTableProps = {
     results: SearchResult []
 }
 
-export type TableRowProps = {
+type TableRowProps = {
     result: SearchResult
 }
 
