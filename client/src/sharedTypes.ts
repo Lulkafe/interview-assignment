@@ -3,6 +3,12 @@ export type GeoCoordinates = {
     lon: number
 }
 
+export type CityInfo = {
+    name: string,
+    country: string,
+    state?: string
+}
+
 export type WeatherInfo = {
     name: string,
     country: string,
