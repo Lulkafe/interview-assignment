@@ -55,7 +55,7 @@ const TableRowWithoutData = (props: TableRowProps) => {
     return (
         <tr>
             <td>
-                <p>Not Found: ${result.keyword}</p>
+                <p>Not Found: {result.keyword}</p>
             </td>
         </tr>
     )
