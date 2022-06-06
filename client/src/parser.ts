@@ -1,26 +1,20 @@
-import { CityInfo, GeoCoordinates, WeatherInfo } from "./sharedTypes";
+import { CityInfo, WeatherInfo } from "./sharedTypes";
 
-
-export const extractGeoCoordinates = (data): GeoCoordinates => {
-    return {
-        lat: data.lat,
-        lon: data.lon
-    }
-}
 
 export const parseGeoResults = (data): CityInfo[] => {
 
-    console.log(data)
-
-    return data.map(d => {
+    return data.map(datum => {
         let cityInfo = {
-            name: d.name,
-            country: d.country,
-            coordinates: extractGeoCoordinates(d)
+            name: datum.name,
+            country: datum.country,
+            coordinates: {
+                lat: datum.lat,
+                lon: datum.lon
+            }
         }
     
-        if (d.state) 
-            cityInfo["state"] = d.state;
+        if (datum.state) 
+            cityInfo["state"] = datum.state;
     
         return cityInfo;
     });
