@@ -13,10 +13,7 @@ export type CityInfo = {
 export type WeatherInfo = {
     name: string,
     country: string,
-    temp: {
-        max: number,
-        min: number
-    },
+    temp: number,
     weather: {
         current: string,
         description: string
