@@ -132,7 +132,7 @@ const SearchBar = () => {
                 /* Show Not Found message only when auto-search runs and found nothing */
                 inputRef.current?.value?.length >= minLenToRunAuto && 
                 cityInfoToShow.length === 0 &&
-                <p className="not-found-message">Not Found</p>
+                <p className="sgtn-table__not-found-msg">Not Found</p>
             }   
         </div>
     )
