@@ -4,6 +4,7 @@ import { Dispatcher } from "../reducer";
 import { parseGeoResults } from "../parser";
 import AppContext from "../context";
 import { fetchCityInfo, fetchWeatherInfo } from "../fetch";
+import LoopeIcon from "../images/loope.png";
 
 
 const SearchBar = () => {
@@ -46,7 +47,7 @@ const SearchBar = () => {
     const aggregateWeatherData = async (index: number = 0) => {
 
         const userInput = inputRef.current.value.trim();
-        let cityInfo: CityInfo [] | null = null;
+        let cityInfos: CityInfo [] | null = null;
 
         inputRef.current.value = "";
         setCityInfoToShow([]);
@@ -60,29 +61,29 @@ const SearchBar = () => {
             if (result.length === 0) 
                 return dispatcher.addNotFoundSearchResult(userInput);
             
-            cityInfo = result;
+            cityInfos = result;
         } else {
-            cityInfo = await fetchCityInfo(userInput);
+            cityInfos = await fetchCityInfo(userInput);
         }
 
         //Unexpected case: an error
-        if (!cityInfo) 
+        if (!cityInfos) 
             return;
 
-        if (cityInfo.length === 0) 
-            return dispatcher.addNotFoundSearchResult(userInput);
-            
+        if (cityInfos.length === 0) 
+            return dispatcher.addNotFoundSearchResult(userInput);            
 
-        let weatherData = await fetchWeatherInfo(cityInfo[index].coordinates);
+        const cityInfo: CityInfo = cityInfos[index];
+        let weatherData = await fetchWeatherInfo(cityInfo.coordinates);
+
 
         //Unexpected case: an error
         if (!weatherData)
             return;
 
-        //Since the weather API only receives the latitude and the lontitude,
-        //its response can have a different city name.
-        //This prevents such a case.
-        weatherData.name = cityInfo[index].name;
+        //Since the OpenWeather API only receives the latitude and the lontitude,
+        //its response can have a different city name, so need to prevent it
+        weatherData.name = cityInfo.name;
 
         dispatcher.addSearchResult(userInput, weatherData);
 
@@ -96,23 +97,27 @@ const SearchBar = () => {
 
 
     return (
-        <div>
-            <form onSubmit={onSubmit}>
-                <input type="text" 
+        <div className="searchbar-wrapper">
+            <form onSubmit={onSubmit} className="searchbar">
+                <input type="text"
+                    className="searchbar__input" 
                     ref={inputRef} 
                     placeholder="Enter a city name"
                     onInput={onInput}/>
-                <button type="submit">Search</button>
+                <button type="submit" className="searchbar__button">
+                    <img src={LoopeIcon} alt="loope icon" className="loope-icon"/>
+                </button>
             </form>
             { 
                 /* Show a suggestion table */
                 cityInfoToShow.length > 0 &&
-                <table>
+                <table className="sgtn-table">
                     <tbody>{
                         parseGeoResults(cityInfoToShow).map((city: CityInfo, i: number) => {
                             return (
                                 <tr key={Math.random().toString(36)}>
-                                    <td onClick={ () => aggregateWeatherData(i) }>
+                                    <td onClick={ () => aggregateWeatherData(i) } 
+                                        className="sgtn-table__td">
                                         {`${city.name}, `}
                                         {city.state? `${city.state}, ` : ""}
                                         {city.country}
@@ -127,7 +132,7 @@ const SearchBar = () => {
                 /* Show Not Found message only when auto-search runs and found nothing */
                 inputRef.current?.value?.length >= minLenToRunAuto && 
                 cityInfoToShow.length === 0 &&
-                <p>Not Found</p>
+                <p className="not-found-message">Not Found</p>
             }   
         </div>
     )

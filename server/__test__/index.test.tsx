@@ -102,20 +102,3 @@ describe("Server", () => {
     
 
 });
-
-
-
-    /*
-    test("2", done => {
-         Request(server).get(`${BASE_URL}/`)
-            .expect(200)
-            .end((err, res) => {
-                expect(err).toBe(null);
-                done();
-            });
-    })
-
-    
-    
-    */
-
