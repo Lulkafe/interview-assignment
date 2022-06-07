@@ -17,7 +17,7 @@ const WeatherTable = (props: ResultTableProps) => {
     const getKey = () => Math.random().toString(36);
 
     return (
-        <table>
+        <table className="wthr-table">
             <tbody>
             {
                 results.map((result: SearchResult) => {
@@ -37,8 +37,8 @@ const TableRowWithData = (props: TableRowProps) => {
     const data: WeatherInfo = props.result.data;
 
     return (
-        <tr>
-            <td>
+        <tr className="wthr-table__tr">
+            <td className="wthr-table__td">
                 { data.name } <br/>
                 { data.country } <br/>
                 { data.weather.current }
@@ -54,8 +54,8 @@ const TableRowWithoutData = (props: TableRowProps) => {
 
     return (
         <tr>
-            <td>
-                <p>Not Found: {result.keyword}</p>
+            <td className="wthr-table___td">
+                <span>Not Found: {result.keyword}</span>
             </td>
         </tr>
     )

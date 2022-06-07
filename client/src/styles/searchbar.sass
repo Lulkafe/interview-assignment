@@ -1,31 +1,71 @@
-$searchbar-radius: 5px
+$radius: 5px
+$search-btn-width: 70px
 
+@mixin sgst-table-style
+    top: 100%
+    width: 100%
+    position: absolute
+    background-color: white
+    border: 1px solid gray
+    border-top-left-radius: 0
+    border-bottom-right-radius: 0
+    border-bottom-right-radius: $radius
+    border-bottom-right-radius: $radius
+
+@mixin sgst-table-td-style
+   font-size: 1.1rem
+   padding: 0.2rem 0 0.2rem 1rem
+   text-align: left
 
 .loope-icon
     width: 100%
     height: auto
+    max-width: 30px
+
+.not-found-message
+    @include sgst-table-style
+    @include sgst-table-td-style
+    margin: 0
+
+.searchbar
+    text-align: center
+    margin-top: 1rem
 
 .searchbar__input
-    width: 220px
-    height: 50px
+    width: calc(90vw - $search-btn-width)
+    max-width: 700px
+    height: 60px
+    padding-left: 1rem
+    font-size: 1.2rem
     vertical-align: middle
     border: 1px solid gray
     border-right-color: white
-    border-top-left-radius: $searchbar-radius
-    border-bottom-left-radius: $searchbar-radius
+    border-top-left-radius: $radius
+    border-bottom-left-radius: $radius
     border-top-right-radius: 0
     border-bottom-right-radius: 0
 
 .searchbar__button    
-    width: 40px
-    height: 50px
+    width: 60px
+    height: 60px
     vertical-align: middle
     border: 1px solid gray
     border-top-left-radius: 0
     border-bottom-left-radius: 0
-    border-top-right-radius: $searchbar-radius
-    border-bottom-right-radius: $searchbar-radius
+    border-top-right-radius: $radius
+    border-bottom-right-radius: $radius
     
 .searchbar-wrapper
-    display: relative
+    position: relative  
+    display: inline-block
 
+.sgtn-table
+    @include sgst-table-style
+    overflow-x: scroll
+    border-spacing: 0
+
+.sgtn-table__td
+   @include sgst-table-td-style
+
+.sgtn-table__td:hover
+    background-color: lightgray
