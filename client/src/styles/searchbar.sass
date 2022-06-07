@@ -22,13 +22,7 @@ $search-btn-width: 70px
     height: auto
     max-width: 30px
 
-.not-found-message
-    @include sgst-table-style
-    @include sgst-table-td-style
-    margin: 0
-
 .searchbar
-    text-align: center
     margin-top: 1rem
 
 .searchbar__input
@@ -63,6 +57,11 @@ $search-btn-width: 70px
     @include sgst-table-style
     overflow-x: scroll
     border-spacing: 0
+
+.sgtn-table__not-found-msg
+    @include sgst-table-style
+    @include sgst-table-td-style
+    margin: 0
 
 .sgtn-table__td
    @include sgst-table-td-style
