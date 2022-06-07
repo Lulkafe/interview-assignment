@@ -39,9 +39,15 @@ const TableRowWithData = (props: TableRowProps) => {
     return (
         <tr className="wthr-table__tr">
             <td className="wthr-table__td">
-                { data.name } <br/>
-                { data.country } <br/>
-                { data.weather.current }
+                { `📍${data.name}, ${data.country}` }
+                <br/>
+                <span className="wthr-table-td__current-wthr">
+                    { data.weather.current }
+                </span>
+                &nbsp; 
+                <span className="wthr-table-td__temp">
+                    🌡️{ Math.round(data.temp) }&#8451;
+                </span>
             </td>
         </tr>
     )
@@ -54,8 +60,10 @@ const TableRowWithoutData = (props: TableRowProps) => {
 
     return (
         <tr>
-            <td className="wthr-table___td">
-                <span>Not Found: {result.keyword}</span>
+            <td className="wthr-table__td wthr-table__not-found-td">
+                <span>
+                    Not Found: "{result.keyword}"
+                </span>
             </td>
         </tr>
     )
