@@ -1,5 +1,4 @@
-import { Dispatch, useDebugValue } from "react"
-import { Search } from "react-router-dom"
+import { Dispatch } from "react"
 import { Action, WeatherInfo } from "./sharedTypes"
 import { SearchResult } from "./sharedTypes"
 import { AppState } from "./sharedTypes"
