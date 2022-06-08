@@ -22,16 +22,17 @@ const SearchBar = () => {
     //Check If the suggestion table can appear
     const [canShowTable, setCanShowTable] = useState(false);
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const inputRef = useRef<HTMLInputElement>(null);
     const sgtnTableRef = useClickOutside(() => setCanShowTable(false));
-    const minLenToRunAuto = 3;
-
+    const minToRunAutoSearch = 3;
     const onInput = async () => {
         const userInput = inputRef.current.value.trim();
         
         //Auto-search shouldn't start and no suggestion table
         //if the user input is too short
-        if (userInput.length < minLenToRunAuto) {
+        if (userInput.length < minToRunAutoSearch) {
             setCanShowTable(false);
             return setCityInfoToShow([]);
         }
@@ -68,24 +69,34 @@ const SearchBar = () => {
         if (userInput in cachedGeoInfo) {
             const result = cachedGeoInfo[userInput];
 
-            if (result.length === 0) 
-                return dispatcher.addNotFoundSearchResult(userInput);
+            if (result.length === 0) {
+                dispatcher.addNotFoundSearchResult(userInput);
+                return;
+            }
             
             cityInfos = result;
         } else {
+            setIsLoading(true);
             cityInfos = await fetchCityInfo(userInput);
         }
 
         //Unexpected case: an error
-        if (!cityInfos) 
+        if (!cityInfos) {
+            setIsLoading(false);
             return;
+        }
 
-        if (cityInfos.length === 0) 
-            return dispatcher.addNotFoundSearchResult(userInput);            
+        //The given city does not exist
+        if (cityInfos.length === 0) {
+            setIsLoading(false);
+            dispatcher.addNotFoundSearchResult(userInput);            
+            return;
+        }
 
         const cityInfo: CityInfo = cityInfos[index];
         let weatherData = await fetchWeatherInfo(cityInfo.coordinates);
 
+        setIsLoading(false);
 
         //Unexpected case: an error
         if (!weatherData)
@@ -96,7 +107,6 @@ const SearchBar = () => {
         weatherData.name = cityInfo.name;
 
         dispatcher.addSearchResult(userInput, weatherData);
-
     }
 
     const onSubmit = (e) => {
@@ -114,8 +124,9 @@ const SearchBar = () => {
                     className="searchbar__input" 
                     ref={inputRef} 
                     placeholder="Enter a city name"
-                    onInput={onInput}/>
-                <button type="submit" className="searchbar__button">
+                    onInput={onInput}
+                    disabled={isLoading}/>
+                <button type="submit" className="searchbar__button" disabled={isLoading}>
                     <img src={LoopeIcon} alt="loope icon" className="loope-icon"/>
                 </button>
             </form>
