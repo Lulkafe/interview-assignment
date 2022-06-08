@@ -1,10 +1,11 @@
-import React, { useRef, useContext, useState } from "react";
+import React, { useRef, useContext, useState, MutableRefObject } from "react";
 import { CityInfo } from "../sharedTypes";
 import { Dispatcher } from "../reducer";
 import { parseGeoResults } from "../parser";
 import AppContext from "../context";
 import { fetchCityInfo, fetchWeatherInfo } from "../fetch";
 import LoopeIcon from "../images/loope.png";
+import { useEffect } from "react";
 
 
 const SearchBar = () => {
@@ -18,27 +19,35 @@ const SearchBar = () => {
     //Store the raw result (array) to show a suggestion table
     const [cityInfoToShow, setCityInfoToShow] = useState([]);
 
-    const inputRef = useRef(null);
+    //Check If the suggestion table can appear
+    const [canShowTable, setCanShowTable] = useState(false);
+
+    const inputRef = useRef<HTMLInputElement>(null);
+    const sgtnTableRef = useClickOutside(() => setCanShowTable(false));
     const minLenToRunAuto = 3;
 
     const onInput = async () => {
         const userInput = inputRef.current.value.trim();
         
-        //Auto-search shouldn't start if the user input is too short
-        if (userInput.length < minLenToRunAuto) 
+        //Auto-search shouldn't start and no suggestion table
+        //if the user input is too short
+        if (userInput.length < minLenToRunAuto) {
+            setCanShowTable(false);
             return setCityInfoToShow([]);
-        
+        }
 
-        //If the word was already searched, just use the cached result
-        if (userInput in cachedGeoInfo) 
+        //If the search result is already cached, just use it
+        if (userInput in cachedGeoInfo) {
+            setCanShowTable(true);
             return setCityInfoToShow(cachedGeoInfo[userInput]);
-            
+        }
 
         const results: CityInfo [] | null = await fetchCityInfo(userInput);
+        setCanShowTable(true);
 
         if (!results) 
             return setCityInfoToShow([]);
-
+        
         setCachedGeoInfo({ ...cachedGeoInfo, [userInput]: results });
         setCityInfoToShow(results);
 
@@ -51,6 +60,7 @@ const SearchBar = () => {
 
         inputRef.current.value = "";
         setCityInfoToShow([]);
+        setCanShowTable(false);
         
         if (userInput.length === 0)
             return;
@@ -98,6 +108,7 @@ const SearchBar = () => {
 
     return (
         <div className="searchbar-wrapper">
+            { /* Search bar + button */}
             <form onSubmit={onSubmit} className="searchbar">
                 <input type="text"
                     className="searchbar__input" 
@@ -108,34 +119,56 @@ const SearchBar = () => {
                     <img src={LoopeIcon} alt="loope icon" className="loope-icon"/>
                 </button>
             </form>
-            { 
-                /* Show a suggestion table */
-                cityInfoToShow.length > 0 &&
-                <table className="sgtn-table">
+            { /* Show a suggestion table or Not Found message */
+                canShowTable &&
+                <table className="sgtn-table" ref={sgtnTableRef}>
                     <tbody>{
+                        cityInfoToShow.length > 0?
+                        /* Suggested items with city names */
                         parseGeoResults(cityInfoToShow).map((city: CityInfo, i: number) => {
                             return (
                                 <tr key={Math.random().toString(36)}>
                                     <td onClick={ () => aggregateWeatherData(i) } 
-                                        className="sgtn-table__td">
+                                        className="sgtn-table__td-w-data">
                                         {`${city.name}, `}
                                         {city.state? `${city.state}, ` : ""}
                                         {city.country}
                                     </td>
                                 </tr>
                             )
-                        })
+                        }) 
+                        : 
+                        /* When nothing to show */
+                        <tr>
+                            <td className="sgtn-table__td-wo-data">Not Found</td>
+                        </tr>
                     }</tbody>
                 </table>
             }
-            {
-                /* Show Not Found message only when auto-search runs and found nothing */
-                inputRef.current?.value?.length >= minLenToRunAuto && 
-                cityInfoToShow.length === 0 &&
-                <p className="sgtn-table__not-found-msg">Not Found</p>
-            }   
         </div>
     )
+}
+
+
+const useClickOutside = (callback) => {
+
+    const ref = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if(ref.current && !ref.current.contains(e.target))
+                callback();
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+    }, [ref])
+
+    return ref;
 }
 
 

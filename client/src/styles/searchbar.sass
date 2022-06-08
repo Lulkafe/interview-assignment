@@ -1,18 +1,7 @@
 $radius: 5px
 $search-btn-width: 70px
 
-@mixin sgst-table-style
-    top: 100%
-    width: 100%
-    position: absolute
-    background-color: white
-    border: 1px solid gray
-    border-top-left-radius: 0
-    border-bottom-right-radius: 0
-    border-bottom-right-radius: $radius
-    border-bottom-right-radius: $radius
-
-@mixin sgst-table-td-style
+@mixin td-common
    font-size: 1.1rem
    padding: 0.2rem 0 0.2rem 1rem
    text-align: left
@@ -39,8 +28,11 @@ $search-btn-width: 70px
     border-top-right-radius: 0
     border-bottom-right-radius: 0
 
+.searchbar__input:focus
+    outline: none
+
 .searchbar__button    
-    width: 60px
+    width: $search-btn-width
     height: 60px
     vertical-align: middle
     border: 1px solid gray
@@ -48,23 +40,32 @@ $search-btn-width: 70px
     border-bottom-left-radius: 0
     border-top-right-radius: $radius
     border-bottom-right-radius: $radius
+    background-color: rgb(239, 239, 239)
     
 .searchbar-wrapper
     position: relative  
     display: inline-block
 
 .sgtn-table
-    @include sgst-table-style
+    top: 100%
+    width: 100%
+    position: absolute
+    background-color: white
+    border: 1px solid gray
+    border-top-left-radius: 0
+    border-bottom-right-radius: 0
+    border-bottom-right-radius: $radius
+    border-bottom-right-radius: $radius
     overflow-x: scroll
     border-spacing: 0
 
-.sgtn-table__not-found-msg
-    @include sgst-table-style
-    @include sgst-table-td-style
-    margin: 0
+.sgtn-table__td-w-data
+   @include td-common
+   cursor: pointer
 
-.sgtn-table__td
-   @include sgst-table-td-style
-
-.sgtn-table__td:hover
+.sgtn-table__td-w-data:hover
     background-color: lightgray
+
+.sgtn-table__td-wo-data
+    @include td-common
+
