@@ -2,5 +2,6 @@
 
 export default {
     weather: "http://enter/productURL/here",
-    geoLoc: "http://enter/productURL/here"
+    geoLoc: "http://enter/productURL/here",
+    ping: "http://enter/productURL/here"
 }

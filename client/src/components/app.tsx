@@ -5,12 +5,17 @@ import AppContext from "../context";
 import WeatherTable from "../components/weatherTable";
 import { stateReducer, Dispatcher, initState } from "../reducer";
 import MainLogo from "../images/icon.png";
+import { pingToServer } from "../fetch";
 
 
 export const App = () => {
 
     const [state, dispatch] = useReducer(stateReducer, initState);
     const dispatcher: Dispatcher = new Dispatcher(dispatch);
+
+    useEffect(() => {
+        pingToServer();
+    }, [])
 
     return (
         <AppContext.Provider value={{state, dispatcher}}>

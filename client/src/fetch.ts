@@ -35,3 +35,10 @@ export const fetchWeatherInfo = async (coordinates: GeoCoordinates): Promise<Wea
         
     return null;
 }
+
+//Server instance sleeps if there is no access for 15 min under a free plan
+//This function just tries to wake the server up.
+//The server responds with 200 (OK) for this URL.
+export const pingToServer = async () => {
+    await fetch(API_URLs.ping);
+}

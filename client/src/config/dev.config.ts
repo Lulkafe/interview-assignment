@@ -2,5 +2,6 @@
 
 export default {
     weather: "http://localhost:8080/api/city/weather",
-    geoLoc: "http://localhost:8080/api/city/info"
+    geoLoc: "http://localhost:8080/api/city/info",
+    ping: "http://localhost:8080"
 }
