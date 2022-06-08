@@ -6,7 +6,7 @@ const stylesHandler = 'style-loader';
 module.exports = {
     entry: './src/components/index.tsx',
     output: {
-        path: path.join(__dirname, 'dist'),
+        path: path.join(__dirname, '../docs'),
         clean: true
     },
     plugins: [
