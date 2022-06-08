@@ -39,7 +39,7 @@ const TableRowWithData = (props: TableRowProps) => {
     return (
         <tr className="wthr-table__tr">
             <td className="wthr-table__td">
-                { `📍${data.name}, ${data.country}` }
+                { `${data.name}, ${data.country}` }
                 <br/>
                 <span className="wthr-table-td__current-wthr">
                     { data.weather.current }
