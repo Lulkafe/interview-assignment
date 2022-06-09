@@ -5,10 +5,6 @@ const stylesHandler = 'style-loader';
 
 module.exports = {
     entry: './src/components/index.tsx',
-    output: {
-        path: path.join(__dirname, '../docs'),
-        clean: true
-    },
     plugins: [
         new HtmlWebpackPlugin({
             template: './src/index.html',
