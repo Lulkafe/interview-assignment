@@ -27,17 +27,14 @@ app.use(cors({
 
 
 app.get('/', (reqFromUser: Request, resToUser: Response) => {
-    console.log('[GET] /');
     resToUser.sendStatus(200);
 })
 
 
 //Get data of the current weather from OpenWeather.
-//Insted of the city name, the lattitude and lontidude must be given.
+//Instead of the city name, the latitude and longitude must be given as parameters
 //Detail: https://openweathermap.org/current
 app.get('/api/city/weather', async (reqFromUser: Request, resToUser: Response) => {
-    console.log('[GET] /api/city/weather');
-    
     const { lat, lon } = reqFromUser.query;  
 
     if (typeof lat !== 'string'|| typeof lon !== 'string' ||
@@ -65,11 +62,9 @@ app.get('/api/city/weather', async (reqFromUser: Request, resToUser: Response) =
 
 
 //Get an array of the corresponding city info 
-//(e.g. Country Code, Latitude, Lontitude)
+//(e.g. Country Code, Latitude, Longitude)
 //Detail: https://openweathermap.org/api/geocoding-api
 app.get('/api/city/info', async (reqFromUser: Request, resToUser: Response) => {
-    console.log('[GET] /api/city/info');
-
     const { cityName } = reqFromUser.query;  
     
     if (!cityName || typeof cityName !== 'string')
