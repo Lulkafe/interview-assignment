@@ -45,7 +45,9 @@ const SearchBar = () => {
         }
 
         const results: CityInfo [] | null = await fetchCityInfo(userInput);
-        setCanShowTable(true);
+
+        if (inputRef.current.value.trim().length !== 0)
+            setCanShowTable(true);
 
         if (!results) 
             return setCityInfoToShow([]);
