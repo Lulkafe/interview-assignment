@@ -5,6 +5,7 @@ import { parseGeoResults } from "../parser";
 import AppContext from "../context";
 import { fetchCityInfo, fetchWeatherInfo } from "../fetch";
 import LoopeIcon from "../images/loope.png";
+import LoadingIcon from "../images/loading.gif";
 import { useEffect } from "react";
 
 
@@ -127,7 +128,11 @@ const SearchBar = () => {
                     onInput={onInput}
                     disabled={isLoading}/>
                 <button type="submit" className="searchbar__button" disabled={isLoading}>
-                    <img src={LoopeIcon} alt="loope icon" className="loope-icon"/>
+                    {
+                        isLoading?
+                        <img src={LoadingIcon} alt="loading animation" className="loading-icon"/> :
+                        <img src={LoopeIcon} alt="loope icon" className="loope-icon"/>
+                    }
                 </button>
             </form>
             { /* Show a suggestion table or Not Found message */

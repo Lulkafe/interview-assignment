@@ -6,11 +6,18 @@ $search-btn-width: 70px
    padding: 0.2rem 0 0.2rem 1rem
    text-align: left
 
-.loope-icon
+@mixin search-icon
     width: 100%
     height: auto
-    max-width: 30px
 
+.loading-icon
+    @include search-icon
+    max-width: 25px
+
+.loope-icon
+    @include search-icon
+    max-width: 30px
+    
 .searchbar
     margin-top: 1rem
 
